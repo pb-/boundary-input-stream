@@ -9,7 +9,7 @@ One classic use case is parsing various variants of `multipart/form-data`, but a
 
  * Group id: `dev.baecher.io`
  * Artifact id: `boundary-input-stream`
- * Version: `1.0.0`
+ * Version: `1.0.1`
 
 
 ## API
