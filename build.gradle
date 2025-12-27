@@ -1,0 +1,106 @@
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'maven-publish'
+    id 'org.jreleaser' version '1.21.0'
+}
+
+group 'dev.baecher.io'
+version '0.10.0'
+
+java {
+    sourceCompatibility = 11
+
+    withJavadocJar()
+    withSourcesJar()
+}
+
+tasks.withType(JavaExec) {
+    enableAssertions = true
+}
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'boundary-input-stream'
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = 'boundary-input-stream'
+                description = 'An InputStream that can only be read up to a configurable boundary'
+                url = 'https://github.com/pb-/boundary-input-stream'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'pb-'
+                        name = 'Paul Baecher'
+                        email = 'paul@baecher.dev'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/pb-/boundary-input-stream.git'
+                    developerConnection = 'scm:git:git@github.com:pb-/boundary-input-stream.git'
+                    url = 'https://github.com/pb-/boundary-input-stream'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = layout.buildDirectory.dir('staging-deploy')
+        }
+    }
+}
+
+jreleaser {
+    signing {
+        active = 'ALWAYS'
+        armored = true
+    }
+
+    deploy {
+        maven {
+            mavenCentral {
+                sonatype {
+                    active = 'ALWAYS'
+                    url = 'https://central.sonatype.com/api/v1/publisher'
+                    stagingRepository('build/staging-deploy')
+                }
+            }
+        }
+    }
+}
+
+javadoc {
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
+
