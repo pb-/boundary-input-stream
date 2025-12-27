@@ -32,6 +32,10 @@ boolean atBoundary()
 
 ## Release notes
 
+### 1.0.1
+
+ * Fixed initial release, version number was incorrect.
+
 ### 1.0.0
 
  * Initial public release.

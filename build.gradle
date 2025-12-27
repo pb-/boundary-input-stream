@@ -6,7 +6,7 @@ plugins {
 }
 
 group 'dev.baecher.io'
-version '0.10.0'
+version '1.0.1'
 
 java {
     sourceCompatibility = 11
@@ -14,11 +14,6 @@ java {
     withJavadocJar()
     withSourcesJar()
 }
-
-tasks.withType(JavaExec) {
-    enableAssertions = true
-}
-
 
 repositories {
     mavenCentral()
@@ -83,6 +78,9 @@ jreleaser {
     signing {
         active = 'ALWAYS'
         armored = true
+        mode = 'FILE'
+        publicKey = 'key.pub'
+        secretKey = 'key.sec'
     }
 
     deploy {
